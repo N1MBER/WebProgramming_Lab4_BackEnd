@@ -10,16 +10,19 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
+import main.web.service.PointService;
 
 @RestController
 public class PointController {
 
     private final PointRepository pointRepository;
     private final UserRepository userRepository;
+    private final PointService pointService;
 
-    PointController(PointRepository pointRepository, UserRepository userRepository) {
+    PointController(PointRepository pointRepository, UserRepository userRepository, PointService pointService) {
         this.pointRepository = pointRepository;
         this.userRepository = userRepository;
+        this.pointService = pointService;
     }
 
 
@@ -43,6 +46,8 @@ public class PointController {
 //        System.out.println(newPoint.getHit());
         newPoint.setUser(userRepository.findByUsername(user.getName()));
         System.out.println("Created new point: " +newPoint);
+        pointService.count(newPoint);
+        pointService.getSquare(newPoint.getR());
         return pointRepository.save(newPoint).convertToSimplePoint();
     }
 }
